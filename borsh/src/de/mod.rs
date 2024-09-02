@@ -282,12 +282,6 @@ macro_rules! impl_for_float {
                     .read_exact(&mut buf)
                     .map_err(unexpected_eof_to_unexpected_length_of_input)?;
                 let res = $type::from_bits($int_type::from_le_bytes(buf.try_into().unwrap()));
-                if res.is_nan() {
-                    return Err(Error::new(
-                        ErrorKind::InvalidData,
-                        "For portability reasons we do not allow to deserialize NaNs.",
-                    ));
-                }
                 Ok(res)
             }
         }

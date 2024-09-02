@@ -13,7 +13,6 @@ use crate::io::{Error, ErrorKind, Result, Write};
 
 pub(crate) mod helpers;
 
-const FLOAT_NAN_ERR: &str = "For portability reasons we do not allow to serialize NaNs.";
 
 /// A data-structure that can be serialized into binary format by NBOR.
 ///
@@ -138,9 +137,6 @@ macro_rules! impl_for_float {
         impl BorshSerialize for $type {
             #[inline]
             fn serialize<W: Write>(&self, writer: &mut W) -> Result<()> {
-                if self.is_nan() {
-                    return Err(Error::new(ErrorKind::InvalidData, FLOAT_NAN_ERR));
-                }
                 writer.write_all(&self.to_bits().to_le_bytes())
             }
         }
